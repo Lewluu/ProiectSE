@@ -1,28 +1,25 @@
-import kivy
-from kivy import animation
-from kivy.app import App
-from kivy.core import window
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
-from kivy.animation import Animation
-from kivy.uix.button import Button
-from kivy.graphics import Rectangle
+import pyglet
+from pyglet import shapes
+from pyglet.window import key
 
-class Sim(Widget):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+window=pyglet.window.Window(1200,800)
+batch=pyglet.graphics.Batch()
+keys=key.KeyStateHandler()
+window.push_handlers(keys)
 
-        with self.canvas:
-             self.rect=Rectangle(pos=(0,0),size=(100,100))
+rectangle=shapes.Rectangle(80,80,150,150,color=(125,0,75),batch=batch)
 
-        anim=Animation(pos=(100,100))
-        anim.start(Widget)
+@window.event
+def on_key_press(symbol,modifies):
+    ikey=chr(symbol)
+    if ikey=='a':
+        rectangle.x-=5
 
+@window.event
+def on_draw():
+    print("Drawing!!!")
+    window.clear()
+    batch.draw()
 
-class SimApp(App):
-    def build(self):
-        return Sim()
-
-if __name__=="__main__":
-    SimApp().run()
+pyglet.app.run()
 
