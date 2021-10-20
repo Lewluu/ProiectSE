@@ -9,10 +9,7 @@ batch=pyglet.graphics.Batch()
 rectangle=shapes.Rectangle(280,280,150,150,color=(125,0,75),batch=batch)
 
 speed=5
-mvright=False
-mvleft=False
-mvup=False
-mvdown=False
+mvright=mvleft=mvup=mvdown=False
 
 @window.event
 def on_key_press(symbol,modifies):
