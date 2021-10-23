@@ -6,7 +6,8 @@ window=pyglet.window.Window(1200,800)
 window.set_location(350,150)
 batch=pyglet.graphics.Batch()
 
-rectangle=shapes.Rectangle(280,280,150,150,color=(125,0,75),batch=batch)
+rectangle=shapes.Rectangle(280,280,100,100,color=(125,0,75),batch=batch)
+rectangle.anchor_position=(25,25)
 
 speed=5
 mvright=mvleft=mvup=mvdown=False
@@ -38,7 +39,7 @@ def on_key_release(symbol,modifies):
         mvdown=False
 
 
-def callback(dt):
+def MainLoop(dt):
     if mvright:
         rectangle.x+=speed
     if mvleft:
@@ -49,7 +50,7 @@ def callback(dt):
         rectangle.y-=speed
 
 
-clock.schedule_interval(callback,0.0005)
+clock.schedule_interval(MainLoop,0.0005)
 
 
 @window.event
