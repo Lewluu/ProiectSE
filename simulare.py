@@ -40,7 +40,7 @@ lines=[
     ]
 
 #simulation variables
-speed=2.5
+speed=150
 change_direction=False
 rot_angle=50
 rectangle.rotation=rot_angle
@@ -69,22 +69,21 @@ def MainLoop(dt):
     global rot_angle,rad_angle
     if change_direction==False:
         #update position
-        rectangle.x+=speed*sympy.cos(rad_angle)
-        rectangle.y+=speed*sympy.sin(rad_angle)
+        rectangle.x+=speed*sympy.cos(rad_angle)*dt
+        rectangle.y+=speed*sympy.sin(rad_angle)*dt
         #check if object is in the polygon
         for ang in point_angles:
-            if ang==90 or ang==0:
+            if ang<0:
                 change_direction=True
     if change_direction==True:
-        rectangle.rotation+=(speed/2)
-        rot_angle+=(speed/2)
-        if rot_angle==170:
+        rectangle.rotation+=(speed/2)*dt
+        rot_angle+=(speed/2)*dt
+        if rot_angle>=170:
             change_direction=False
             rot_angle=0
             rad_angle=sympy.rad(rectangle.rotation)
-    print(rectangle.rotation)
 
-clock.schedule_interval(MainLoop,0.0005)
+clock.schedule_interval(MainLoop,1/60.0)
 
 @window.event
 def on_draw():
