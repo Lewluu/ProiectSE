@@ -42,7 +42,9 @@ lines=[
 #simulation variables
 speed=2.5
 change_direction=False
-angle=90
+rot_angle=50
+rectangle.rotation=rot_angle
+rad_angle=sympy.rad(rectangle.rotation)
 
 def MainLoop(dt):
     #distance between points and object
@@ -51,7 +53,7 @@ def MainLoop(dt):
     dy=[rectangle.y-points_list[0][1],points_list[1][1]-rectangle.y]
 
     #angles list
-    angles=[
+    point_angles=[
         (math.atan2(dx[0],dy[0])*180)/math.pi,
         (math.atan2(dx[0],dy[1])*180)/math.pi,
         (math.atan2(dx[1],dy[1])*180)/math.pi,
@@ -64,9 +66,23 @@ def MainLoop(dt):
         lines[i].y=rectangle.y
 
     #direction flow
+    global rot_angle,rad_angle
     if change_direction==False:
-        new_angle=math.radians(angle)
-        print(math.cos(new_angle))
+        #update position
+        rectangle.x+=speed*sympy.cos(rad_angle)
+        rectangle.y+=speed*sympy.sin(rad_angle)
+        #check if object is in the polygon
+        for ang in point_angles:
+            if ang==90 or ang==0:
+                change_direction=True
+    if change_direction==True:
+        rectangle.rotation+=(speed/2)
+        rot_angle+=(speed/2)
+        if rot_angle==170:
+            change_direction=False
+            rot_angle=0
+            rad_angle=sympy.rad(rectangle.rotation)
+    print(rectangle.rotation)
 
 clock.schedule_interval(MainLoop,0.0005)
 
