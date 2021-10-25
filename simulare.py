@@ -1,12 +1,9 @@
 import math
 import time
-from os import supports_bytes_environ
 import sympy
 import pyglet
 from pyglet import shapes
 from pyglet import clock
-import random
-from pyglet import gl
 
 #init the window
 window=pyglet.window.Window(1200,800)
@@ -96,6 +93,7 @@ def MainLoop(dt):
             change_direction=False
 
     print(DT)
+    del point_angles
 
 clock.schedule_interval(MainLoop,1/60.0)
 
