@@ -4,6 +4,10 @@ import sympy
 import pyglet
 from pyglet import shapes
 from pyglet import clock
+from guppy import hpy
+
+#memory performance profile
+h=hpy()
 
 #init the window
 window=pyglet.window.Window(1200,800)
@@ -47,6 +51,8 @@ DT=0
 ctm=0
 rectangle.rotation=rot_angle
 rad_angle=sympy.rad(rectangle.rotation)
+xdir=speed*sympy.cos(rad_angle)
+ydir=speed*sympy.sin(rad_angle)
 
 def MainLoop(dt):
     #distance between points and object
@@ -68,32 +74,29 @@ def MainLoop(dt):
     #     lines[i].y=rectangle.y
 
     #direction flow
-    global rot_angle,rad_angle,speed,DT,ctm
+    global rot_angle,rad_angle,speed,DT,ctm,xdir,ydir
     DT=time.perf_counter()-ctm                          #it'll start just after changing direction
     if change_direction==False:
         #updating current time
         ctm=time.perf_counter()
         #check if object is in the polygon
         #update position
-        rectangle.x+=speed*sympy.cos(rad_angle)*dt
-        rectangle.y+=speed*sympy.sin(rad_angle)*dt
+        rectangle.x+=xdir*dt
+        rectangle.y+=ydir*dt
         for ang in point_angles:
-            if ang<0 or ang>90:
-                change_direction=True
+             if ang<0 or ang>90:
+                 change_direction=True
+    #memory leak here
     if change_direction==True:
         if rot_angle<170:
             rectangle.rotation+=rot_speed*dt
             rot_angle+=rot_speed*dt
             rad_angle=sympy.rad(rectangle.rotation)
-        elif DT<2:
-            rectangle.x+=speed*sympy.cos(rad_angle)*dt
-            rectangle.y+=speed*sympy.sin(rad_angle)*dt
         else:
+            xdir=speed*sympy.cos(rad_angle)
+            ydir=speed*sympy.sin(rad_angle)
             rot_angle=0
             change_direction=False
-
-    print(DT)
-    del point_angles
 
 clock.schedule_interval(MainLoop,1/60.0)
 
