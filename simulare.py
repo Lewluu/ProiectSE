@@ -1,4 +1,6 @@
 import math
+import time
+from os import supports_bytes_environ
 import sympy
 import pyglet
 from pyglet import shapes
@@ -32,17 +34,20 @@ for points in points_list:
                 ('c3B',(255,0,0,255,0,0)))
 
 #lines, help only for visuals
-lines=[
-    shapes.Line(rectangle.x,rectangle.y,points_list[0][0],points_list[0][1],width=1,color=(0,255,0),batch=batch),
-    shapes.Line(rectangle.x,rectangle.y,points_list[1][0],points_list[1][1],width=1,color=(0,255,0),batch=batch),
-    shapes.Line(rectangle.x,rectangle.y,points_list[2][0],points_list[2][1],width=1,color=(0,255,0),batch=batch),
-    shapes.Line(rectangle.x,rectangle.y,points_list[3][0],points_list[3][1],width=1,color=(0,255,0),batch=batch)
-    ]
+# lines=[
+#     shapes.Line(rectangle.x,rectangle.y,points_list[0][0],points_list[0][1],width=1,color=(0,255,0),batch=batch),
+#     shapes.Line(rectangle.x,rectangle.y,points_list[1][0],points_list[1][1],width=1,color=(0,255,0),batch=batch),
+#     shapes.Line(rectangle.x,rectangle.y,points_list[2][0],points_list[2][1],width=1,color=(0,255,0),batch=batch),
+#     shapes.Line(rectangle.x,rectangle.y,points_list[3][0],points_list[3][1],width=1,color=(0,255,0),batch=batch)
+#     ]
 
 #simulation variables
 speed=150
+rot_speed=100
 change_direction=False
-rot_angle=50
+rot_angle=0
+DT=0
+ctm=0
 rectangle.rotation=rot_angle
 rad_angle=sympy.rad(rectangle.rotation)
 
@@ -61,27 +66,36 @@ def MainLoop(dt):
     ]
 
     #updatin the lines
-    for i in range(0,len(lines)):
-        lines[i].x=rectangle.x
-        lines[i].y=rectangle.y
+    # for i in range(0,len(lines)):
+    #     lines[i].x=rectangle.x
+    #     lines[i].y=rectangle.y
 
     #direction flow
-    global rot_angle,rad_angle
+    global rot_angle,rad_angle,speed,DT,ctm
+    DT=time.perf_counter()-ctm                          #it'll start just after changing direction
     if change_direction==False:
+        #updating current time
+        ctm=time.perf_counter()
+        #check if object is in the polygon
         #update position
         rectangle.x+=speed*sympy.cos(rad_angle)*dt
         rectangle.y+=speed*sympy.sin(rad_angle)*dt
-        #check if object is in the polygon
         for ang in point_angles:
-            if ang<0:
+            if ang<0 or ang>90:
                 change_direction=True
     if change_direction==True:
-        rectangle.rotation+=(speed/2)*dt
-        rot_angle+=(speed/2)*dt
-        if rot_angle>=170:
-            change_direction=False
-            rot_angle=0
+        if rot_angle<170:
+            rectangle.rotation+=rot_speed*dt
+            rot_angle+=rot_speed*dt
             rad_angle=sympy.rad(rectangle.rotation)
+        elif DT<2:
+            rectangle.x+=speed*sympy.cos(rad_angle)*dt
+            rectangle.y+=speed*sympy.sin(rad_angle)*dt
+        else:
+            rot_angle=0
+            change_direction=False
+
+    print(DT)
 
 clock.schedule_interval(MainLoop,1/60.0)
 
