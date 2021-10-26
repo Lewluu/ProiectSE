@@ -4,10 +4,6 @@ import sympy
 import pyglet
 from pyglet import shapes
 from pyglet import clock
-from guppy import hpy
-
-#memory performance profile
-h=hpy()
 
 #init the window
 window=pyglet.window.Window(1200,800)
