@@ -92,9 +92,12 @@ def MainLoop(dt):
             rectangle.rotation+=rot_speed*dt
             rot_angle+=rot_speed*dt
             rad_angle=sympy.rad(rectangle.rotation)
-        else:
+        elif DT<5:
             xdir=speed*sympy.cos(rad_angle)
             ydir=speed*sympy.sin(rad_angle)
+            rectangle.x+=xdir*dt
+            rectangle.y+=ydir*dt
+        else:
             rot_angle=0
             change_direction=False
 
