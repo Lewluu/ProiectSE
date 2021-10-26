@@ -39,7 +39,7 @@ for points in points_list:
 #     ]
 
 #simulation variables
-speed=150
+speed=250
 rot_speed=100
 change_direction=False
 rot_angle=0
@@ -53,8 +53,8 @@ ydir=speed*sympy.sin(rad_angle)
 def MainLoop(dt):
     #distance between points and object
     global change_direction
-    dx=[rectangle.x-points_list[0][0],points_list[2][0]-rectangle.x]
-    dy=[rectangle.y-points_list[0][1],points_list[1][1]-rectangle.y]
+    # dx=[rectangle.x-points_list[0][0],points_list[2][0]-rectangle.x]
+    # dy=[rectangle.y-points_list[0][1],points_list[1][1]-rectangle.y]
 
     #angles list
     # point_angles=[
@@ -92,8 +92,8 @@ def MainLoop(dt):
             rot_angle+=rot_speed*dt
             rad_angle=sympy.rad(rectangle.rotation)
         elif DT<5:
-            xdir=speed*sympy.cos(rad_angle)
-            ydir=speed*sympy.sin(rad_angle)
+            xdir=speed*sympy.cos(-rad_angle)
+            ydir=speed*sympy.sin(-rad_angle)
             rectangle.x+=xdir*dt
             rectangle.y+=ydir*dt
         else:
