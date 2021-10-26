@@ -57,12 +57,12 @@ def MainLoop(dt):
     dy=[rectangle.y-points_list[0][1],points_list[1][1]-rectangle.y]
 
     #angles list
-    point_angles=[
-        (math.atan2(dx[0],dy[0])*180)/math.pi,
-        (math.atan2(dx[0],dy[1])*180)/math.pi,
-        (math.atan2(dx[1],dy[1])*180)/math.pi,
-        (math.atan2(dx[1],dy[0])*180)/math.pi
-    ]
+    # point_angles=[
+    #     (math.atan2(dx[0],dy[0])*180)/math.pi,
+    #     (math.atan2(dx[0],dy[1])*180)/math.pi,
+    #     (math.atan2(dx[1],dy[1])*180)/math.pi,
+    #     (math.atan2(dx[1],dy[0])*180)/math.pi
+    # ]
 
     #updatin the lines
     # for i in range(0,len(lines)):
@@ -79,9 +79,12 @@ def MainLoop(dt):
         #update position
         rectangle.x+=xdir*dt
         rectangle.y+=ydir*dt
-        for ang in point_angles:
-             if ang<0 or ang>90:
-                 change_direction=True
+        #new method to check if the object is out of bounds
+        if rectangle.x<=points_list[0][0] or rectangle.x>=points_list[2][0] or rectangle.y<=points_list[0][1] or rectangle.y>=points_list[1][1]:
+            change_direction=True
+        # for ang in point_angles:
+        #      if ang<0 or ang>90:
+        #          change_direction=True
     #memory leak here
     if change_direction==True:
         if rot_angle<170:
