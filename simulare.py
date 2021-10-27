@@ -45,6 +45,7 @@ speed=250
 rot_speed=100
 change_direction=False
 rot_angle=0
+rot_array=[0]
 DT=0
 ctm=0
 rectangle.rotation=rot_angle
