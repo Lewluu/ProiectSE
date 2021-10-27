@@ -64,7 +64,6 @@ def MainLoop(dt):
             ydir=round(speed*sympy.sin(-rad_angle),2)
             rot_angle=0
             is_rotating=False
-    print(xdir)
 
 
 clock.schedule_interval(MainLoop,1/60.0)
