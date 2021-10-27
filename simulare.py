@@ -15,8 +15,6 @@ batch=pyglet.graphics.Batch()
 #init the object
 rectangle=shapes.Rectangle(125,125,100,100,color=(125,0,75),batch=batch)
 rectangle.anchor_position=(50,50)
-sensor=shapes.Rectangle(100,100,50,50,color=(155,0,155),batch=batch)
-sensor.anchor_position=(25,-25)
 
 #polygon
 points_list=[
@@ -43,60 +41,37 @@ for points in points_list:
 #simulation variables
 speed=250
 rot_speed=100
-change_direction=False
+is_rotating=False
 rot_angle=0
-rot_array=[0]
-DT=0
-ctm=0
+rot_prev=-1
+rot_current=0
 rectangle.rotation=rot_angle
 rad_angle=sympy.rad(rectangle.rotation)
 xdir=speed*sympy.cos(rad_angle)
 ydir=speed*sympy.sin(rad_angle)
 
 def MainLoop(dt):
-    #distance between points and object
-    global change_direction
-    # dx=[rectangle.x-points_list[0][0],points_list[2][0]-rectangle.x]
-    # dy=[rectangle.y-points_list[0][1],points_list[1][1]-rectangle.y]
-
-    #angles list
-    # point_angles=[
-    #     (math.atan2(dx[0],dy[0])*180)/math.pi,
-    #     (math.atan2(dx[0],dy[1])*180)/math.pi,
-    #     (math.atan2(dx[1],dy[1])*180)/math.pi,
-    #     (math.atan2(dx[1],dy[0])*180)/math.pi
-    # ]
-
     #direction flow
-    global rot_angle,rad_angle,speed,DT,ctm,xdir,ydir
-    DT=time.perf_counter()-ctm                          #it'll start just after changing direction
-    if change_direction==False:
-        #updating current time
-        ctm=time.perf_counter()
-        #check if object is in the polygon
-        #update position
+    global rot_prev, rot_current,is_rotating,rot_speed,rot_angle,xdir,ydir
+    if is_rotating==False:
         rectangle.x+=xdir*dt
         rectangle.y+=ydir*dt
-        #new method to check if the object is out of bounds
+    if rot_current!=rot_prev:
         if rectangle.x<=points_list[0][0] or rectangle.x>=points_list[2][0] or rectangle.y<=points_list[0][1] or rectangle.y>=points_list[1][1]:
-            change_direction=True
-        # for ang in point_angles:
-        #      if ang<0 or ang>90:
-        #          change_direction=True
-    #memory leak here
-    if change_direction==True:
-        if rot_angle<170:
-            rectangle.rotation+=rot_speed*dt
-            rot_angle+=rot_speed*dt
+            is_rotating=True
+            rot_prev=rot_current
+            print("Yes")
+    if is_rotating:
+        rectangle.rotation+=rot_speed*dt
+        rot_angle+=rot_speed*dt
+        if rot_angle>=170:
             rad_angle=sympy.rad(rectangle.rotation)
-        elif DT<2:                                                      #trying to syncronize rotation speed with direction change
             xdir=speed*sympy.cos(-rad_angle)
             ydir=speed*sympy.sin(-rad_angle)
-            rectangle.x+=xdir*dt
-            rectangle.y+=ydir*dt
-        else:
+            rot_current+=1
             rot_angle=0
-            change_direction=False
+            is_rotating=False
+
 
 clock.schedule_interval(MainLoop,1/60.0)
 
