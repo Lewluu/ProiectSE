@@ -12,9 +12,11 @@ window.set_location(350,150)
 #stack every drawable in this variable
 batch=pyglet.graphics.Batch()
 
-#init the rectangle
+#init the object
 rectangle=shapes.Rectangle(125,125,100,100,color=(125,0,75),batch=batch)
 rectangle.anchor_position=(50,50)
+sensor=shapes.Rectangle(100,100,50,50,color=(155,0,155),batch=batch)
+sensor.anchor_position=(25,-25)
 
 #polygon
 points_list=[
@@ -63,11 +65,6 @@ def MainLoop(dt):
     #     (math.atan2(dx[1],dy[1])*180)/math.pi,
     #     (math.atan2(dx[1],dy[0])*180)/math.pi
     # ]
-
-    #updatin the lines
-    # for i in range(0,len(lines)):
-    #     lines[i].x=rectangle.x
-    #     lines[i].y=rectangle.y
 
     #direction flow
     global rot_angle,rad_angle,speed,DT,ctm,xdir,ydir
