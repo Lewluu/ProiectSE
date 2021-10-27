@@ -1,4 +1,3 @@
-import math
 import time
 from pyglet.graphics import vertex_list
 import sympy
@@ -33,37 +32,39 @@ lines=[
 speed=250
 rot_speed=100
 is_rotating=False
-rot_angle=0
+rot_angle=15
 rot_prev=-1
 rot_current=0
 rectangle.rotation=rot_angle
 rad_angle=sympy.rad(rectangle.rotation)
-xdir=speed*sympy.cos(rad_angle)
-ydir=speed*sympy.sin(rad_angle)
+#for performance need to limit decimal float to 2 numbers --- IMPORTANT
+xdir=round(speed*sympy.cos(-rad_angle),2)
+ydir=round(speed*sympy.sin(-rad_angle),2)
+
+print(xdir,ydir)
 
 def MainLoop(dt):
     #direction flow
     global rot_prev, rot_current,is_rotating,rot_speed,rot_angle,xdir,ydir
+    #DT=time.perf_counter()
     #the object will move while it isn't rotating
     if is_rotating==False:
-        rectangle.x+=xdir*dt
-        rectangle.y+=ydir*dt
-    #for not updating the checking condition of collision, the solution is to counter number of rotations and compare to the previous one
-    if rot_current!=rot_prev:
+        rectangle.x+=xdir*round(dt,2)
+        rectangle.y+=ydir*round(dt,2)
+        #probably still need a timer, just for simulation case
         if rectangle.x<=points_list[0][0] or rectangle.x>=points_list[2][0] or rectangle.y<=points_list[0][1] or rectangle.y>=points_list[1][1]:
             is_rotating=True
-            rot_prev=rot_current                                #to get out of this condition while it's rotating
     if is_rotating:
         rectangle.rotation+=rot_speed*dt
         rot_angle+=rot_speed*dt
         #with this condition, there'll be just one time calculation of direction
         if rot_angle>=170:
             rad_angle=sympy.rad(rectangle.rotation)
-            xdir=speed*sympy.cos(-rad_angle)
-            ydir=speed*sympy.sin(-rad_angle)
-            rot_current+=1
+            xdir=round(speed*sympy.cos(-rad_angle),2)
+            ydir=round(speed*sympy.sin(-rad_angle),2)
             rot_angle=0
             is_rotating=False
+    print(xdir)
 
 
 clock.schedule_interval(MainLoop,1/60.0)
