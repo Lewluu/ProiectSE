@@ -32,7 +32,7 @@ lines=[
 speed=250
 rot_speed=100
 is_rotating=False
-rot_angle=15
+rot_angle=0
 rot_prev=-1
 rot_current=0
 rectangle.rotation=rot_angle
@@ -41,12 +41,14 @@ rad_angle=sympy.rad(rectangle.rotation)
 xdir=round(speed*sympy.cos(-rad_angle),2)
 ydir=round(speed*sympy.sin(-rad_angle),2)
 
-print(xdir,ydir)
+#tracing line
+tracing_lines=[shapes.Line(rectangle.x,rectangle.y,rectangle.x,rectangle.y,width=80,color=(0,155,0),batch=batch)]
+tracing_lines[0].opacity=150
+tl_no=0
 
 def MainLoop(dt):
     #direction flow
-    global rot_prev, rot_current,is_rotating,rot_speed,rot_angle,xdir,ydir
-    #DT=time.perf_counter()
+    global rot_prev, rot_current,is_rotating,rot_speed,rot_angle,xdir,ydir,tracing_lines,tl_no
     #the object will move while it isn't rotating
     if is_rotating==False:
         rectangle.x+=xdir*round(dt,2)
@@ -54,16 +56,22 @@ def MainLoop(dt):
         #probably still need a timer, just for simulation case
         if rectangle.x<=points_list[0][0] or rectangle.x>=points_list[2][0] or rectangle.y<=points_list[0][1] or rectangle.y>=points_list[1][1]:
             is_rotating=True
+            tracing_lines.append(shapes.Line(rectangle.x,rectangle.y,rectangle.x,rectangle.y,width=80,color=(0,155,0),batch=batch))
+            tracing_lines[tl_no+1].opacity=150
     if is_rotating:
         rectangle.rotation+=rot_speed*dt
         rot_angle+=rot_speed*dt
         #with this condition, there'll be just one time calculation of direction
-        if rot_angle>=170:
+        if rot_angle>=150:
             rad_angle=sympy.rad(rectangle.rotation)
             xdir=round(speed*sympy.cos(-rad_angle),2)
             ydir=round(speed*sympy.sin(-rad_angle),2)
             rot_angle=0
             is_rotating=False
+            tl_no=tl_no+1
+    #updating tracing lines
+    tracing_lines[tl_no].x2=rectangle.x
+    tracing_lines[tl_no].y2=rectangle.y
 
 
 clock.schedule_interval(MainLoop,1/60.0)
