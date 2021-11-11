@@ -30,7 +30,7 @@ lines=[
 ]
 
 #simulation variables
-speed=250
+speed=850
 rot_speed=100
 is_rotating=False
 rot_angle=0
@@ -60,10 +60,10 @@ def MainLoop(dt):
             tracing_lines.append(shapes.Line(rectangle.x,rectangle.y,rectangle.x,rectangle.y,width=80,color=(0,155,0),batch=batch))
             tracing_lines[tl_no+1].opacity=150
     if is_rotating:
-        rectangle.rotation+=rot_speed*dt
-        rot_angle+=rot_speed*dt
+        rectangle.rotation+=rot_speed*dt*5
+        rot_angle+=rot_speed*dt*5
         #with this condition, there'll be just one time calculation of direction
-        if rot_angle>=150+random.randrange(-20,20,1):
+        if rot_angle>=150+random.randrange(-30,30,1):
             rad_angle=sympy.rad(rectangle.rotation)
             xdir=round(speed*sympy.cos(-rad_angle),2)
             ydir=round(speed*sympy.sin(-rad_angle),2)
